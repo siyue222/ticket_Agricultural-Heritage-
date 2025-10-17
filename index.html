@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>动态时间戳</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: sans-serif;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #timeDisplay {
+            font-size: 18px;
+            margin: 20px;
+            color: white;
+            position: absolute;
+            top: 480px;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+
+       
+
+        .hezi {
+            width: 300px;
+            height: auto;
+            aspect-ratio: 11/20;
+            background-image: url('https://pic1.imgdb.cn/item/68f20dc3c5157e1a887d6b8b.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            position: relative;
+            /* 添加相对定位 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hezi">
+        <p id="timeDisplay">正在加载时间...</p>
+    </div>
+
+    <script>
+        // 页面加载时立即更新时间为当前时间
+        function updateTime() {
+            const now = new Date();
+            // 格式化为 YYYY-MM-DD HH:MM:SS
+            const timeString = now.getFullYear() + '-' +
+                String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                String(now.getDate()).padStart(2, '0') + ' ' +
+                String(now.getHours()).padStart(2, '0') + ':' +
+                String(now.getMinutes()).padStart(2, '0') + ':' +
+                String(now.getSeconds()).padStart(2, '0');
+
+            document.getElementById('timeDisplay').textContent = '扫描时间: ' + timeString;
+        }
+
+        // 页面加载即执行
+        updateTime();
+
+        // 每秒更新一次时间
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+
+</html>
