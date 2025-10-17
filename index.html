@@ -63,7 +63,6 @@
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
             padding: 8px 12px;
             
-            
             margin: 0 auto;
             width: 90%; /* 宽度适应容器 */
             border-radius: 8px;
@@ -105,7 +104,7 @@
     </div>
 
     <script>
-        // 页面加载时立即更新时间为当前时间
+        // 页面加载时更新时间为当前时间（只更新一次）
         function updateTime() {
             const now = new Date();
             // 格式化为 YYYY-MM-DD HH:MM:SS
@@ -139,11 +138,10 @@
             img.onload = handleImageLoad;
             img.onerror = handleImageError;
 
-            // 初始化时间
+            // 初始化时间（只调用一次，不再重复更新）
             updateTime();
-            
-            // 每秒更新一次时间
-            setInterval(updateTime, 1000);
+
+            // 移除了每秒更新时间的 setInterval 调用
 
             // 防止双击缩放（针对移动端）
             let lastTouchEnd = 0;
@@ -158,5 +156,3 @@
     </script>
 </body>
 </html>
-
-
