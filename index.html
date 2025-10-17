@@ -1,50 +1,107 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+    <meta charset="UTF-8">
     <title>动态时间戳</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-family: sans-serif;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background:white;
             color: white;
             min-height: 100vh;
             padding: 20px;
+            /* 防止用户缩放页面 */
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        #timeDisplay {
-            font-size: 18px;
-            margin: 20px;
-            color: white;
-            position: absolute;
-            top: 480px;
-            left: 0;
-            right: 0;
-            text-align: center;
+        .container {
+            width: 100%;
+            max-width: 400px; /* 限制最大宽度 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-       
 
         .hezi {
-            width: 300px;
+            width: 100%;
+            max-width: 300px; /* 图片容器最大宽度 */
             height: auto;
-            aspect-ratio: 11/20;
+            aspect-ratio: 11/20; /* 保持11:20的比例 */
             background-image: url('https://pic1.imgdb.cn/item/68f20dc3c5157e1a887d6b8b.jpg');
             background-size: cover;
             background-position: center;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            background-repeat: no-repeat;
+            border-radius: 16px; /* 更现代的圆角 */
             position: relative;
-            /* 添加相对定位 */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* 更立体的阴影 */
+            overflow: hidden; /* 确保内容不溢出圆角 */
+        }
+
+        #timeDisplay {
+            font-size: 15px; /* 适配手机的字号 */
+            font-weight: 600;
+            color: white;
+            position: absolute;
+            bottom: 10px; /* 使用相对定位，适配不同屏幕 */
+            left: 0;
+            right: 0;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            padding: 8px 12px;
+            
+            
+            margin: 0 auto;
+            width: 90%; /* 宽度适应容器 */
+            border-radius: 8px;
+        }
+
+        /* 加载状态样式 */
+        .loading {
+            opacity: 0.7;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 360px) {
+            .hezi {
+                max-width: 280px;
+            }
+            #timeDisplay {
+                font-size: 14px;
+                bottom: 70px;
+            }
+        }
+
+        @media (min-width: 414px) {
+            .hezi {
+                max-width: 320px;
+            }
+            #timeDisplay {
+                font-size: 16px;
+                bottom: 85px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="hezi">
-        <p id="timeDisplay">正在加载时间...</p>
+    <div class="container">
+        <div class="hezi" id="imageContainer">
+            <p id="timeDisplay">正在加载时间...</p>
+        </div>
     </div>
 
     <script>
@@ -62,12 +119,42 @@
             document.getElementById('timeDisplay').textContent = '扫描时间: ' + timeString;
         }
 
-        // 页面加载即执行
-        updateTime();
+        // 图片加载处理
+        function handleImageLoad() {
+            const container = document.getElementById('imageContainer');
+            container.classList.remove('loading');
+        }
 
-        // 每秒更新一次时间
-        setInterval(updateTime, 1000);
+        function handleImageError() {
+            const timeDisplay = document.getElementById('timeDisplay');
+            timeDisplay.textContent = '图片加载失败，请检查网络';
+            timeDisplay.style.color = '#ff6b6b';
+        }
+
+        // 页面加载执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 预加载图片
+            const img = new Image();
+            img.src = 'https://pic1.imgdb.cn/item/68f20dc3c5157e1a887d6b8b.jpg';
+            img.onload = handleImageLoad;
+            img.onerror = handleImageError;
+
+            // 初始化时间
+            updateTime();
+            
+            // 每秒更新一次时间
+            setInterval(updateTime, 1000);
+
+            // 防止双击缩放（针对移动端）
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        });
     </script>
 </body>
-
 </html>
